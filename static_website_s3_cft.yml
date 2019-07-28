@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: TODO
+Description: Builds an S3 bucket, cloudfront distribution and route53 record set
+  for both a primary static website and a redirect
 Parameters:
   DomainName:
     Type: String
@@ -28,6 +29,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref DomainName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       WebsiteConfiguration:
         RedirectAllRequestsTo:
           HostName: !Sub "www.${DomainName}"
@@ -102,6 +108,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "www.${DomainName}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           -
